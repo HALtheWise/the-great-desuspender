@@ -2,10 +2,14 @@ function fix_tabs(){
     chrome.tabs.query({}, function(tabs){
         var num_fixed = 0
         for (tab of tabs){
-            if (tab.url.startsWith("chrome-extension://klbibkeccnjlkjkiokjodocebajanakg")){
-                const substr = tab.url.slice(tab.url.indexOf("url=")+4);
-                console.log(substr);
-                num_fixed += 1;
+            if (tab.url.startsWith("chrome-extension://klbibkeccnjlkjkiokjodocebajanakg/suspended.html")){
+                const idx = tab.url.indexOf("uri=")
+                if (idx > 0){
+                    const substr = tab.url.slice(idx + 4);
+                    console.log(substr);
+                    num_fixed += 1;
+                    chrome.tabs.update(tab.id, {"url": substr})
+                }
             }
         }
         alert("Scanned: " + tabs.length + ", Fixed: " + num_fixed)
